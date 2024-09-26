@@ -142,6 +142,64 @@ void string_example() {
 	std::cout << a << std::endl;
 }
 
+void pointer_example() {
+	int a, b;
+	int* a_ptr, * b_ptr;
+	a_ptr = &a;
+	*a_ptr = 10;
+	b_ptr = a_ptr;
+	a_ptr = &b;
+	*a_ptr = 20;
+	std::cout << "a: " << a << std::endl;
+	std::cout << "b: " << b << std::endl;
+	std::cout << "*a_ptr: " << *a_ptr << std::endl;
+	std::cout << "*b_ptr: " << *b_ptr << std::endl;
+}
+
+void cast_example() {
+	int* ptr = new int(69);
+	char* ptr2 = reinterpret_cast<char*>(ptr);
+	std::cout << *ptr << std::endl;
+	std::cout << *ptr2 << std::endl;
+	std::cout << ptr << std::endl;
+	std::cout << ptr2 << std::endl;
+}
+
+void pointer_arithmetics() {
+	int arr[4] = { 1,2,3,4 };
+	int* a;
+	int* pa;
+	pa = arr;
+	a = &arr[0];
+	std::cout << *pa << " " << *a << std::endl;
+	std::cout << *(pa + 1) << " " << *(a + 1) << std::endl;
+	std::cout << *(pa + 2) << " " << *(a + 2) << std::endl;
+
+	std::cout << pa << " " << a << std::endl;
+	std::cout <<  ++pa << " " << a+1 << std::endl;
+	std::cout << ++pa << " " << a+2 << std::endl;
+}
+
+void pointers_2d() {
+	int arr[3][4] = {
+		{1,2,3,4},
+		{5,6,7,8},
+		{9,10,11,12}
+	};
+
+	int* a[3];
+	for (int i = 0; i < 3; i++) {
+		a[i] = arr[i];
+	}
+
+	int** b;
+	b = a;
+
+	std::cout << a[2][2] << " " << b[2][2] << std::endl;
+	std::cout << **(a+1) << " " << **(b+1) << std::endl;
+	std::cout << (*a + 1)[0] << " " << *(*b + 1) << std::endl;
+	std::cout << (*(a + 1))[1] << " " << *(*(b + 1)+1) << std::endl;
+}
 void main() {
 	// std::cout << "Hello World!" << std::endl;
 	// size_of_types();
@@ -154,4 +212,8 @@ void main() {
 	// linear_search();
 	// search_example();
 	// string_example();
+	// pointer_example();
+	// cast_example();
+	// pointer_arithmetics();
+	// pointers_2d();
 } 
