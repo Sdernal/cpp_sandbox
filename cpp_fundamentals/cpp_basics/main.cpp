@@ -200,6 +200,63 @@ void pointers_2d() {
 	std::cout << (*a + 1)[0] << " " << *(*b + 1) << std::endl;
 	std::cout << (*(a + 1))[1] << " " << *(*(b + 1)+1) << std::endl;
 }
+
+
+class Car {
+public:
+	std::string name;
+	int price;
+	static int count;
+	static int tax;
+
+	Car() {
+		name = "default";
+		price = -1;
+		++count;
+	}
+
+	Car(std::string name, int price) {
+		this->name = name;
+		this->price = price;
+		++count;
+	}
+
+	Car(const Car& c) {
+		name = c.name;
+		price = c.price;
+		++count;
+	}
+
+	void print() {
+		std::cout << "Car " << name << " price: " << price + tax << std::endl;
+	}
+
+	void asign_tax(int tax) {
+		Car::tax = tax;
+	}
+
+	~Car() {
+		--count;
+		std::cout << name << " crushed " << count << " cars remains" << std::endl;
+	}
+};
+
+int Car::count = 0;
+int Car::tax = 0;
+
+void class_example() {
+	Car lada("lada", 3000000);
+	{
+		Car granta(lada);
+		granta.name = "granta";
+		granta.print();
+		granta.asign_tax(10000);
+	}
+	lada.print();
+	lada.asign_tax(20000);
+	lada.print();
+}
+
 void main() {
 	// std::cout << "Hello World!" << std::endl;
 	// size_of_types();
@@ -216,4 +273,5 @@ void main() {
 	// cast_example();
 	// pointer_arithmetics();
 	// pointers_2d();
+	// class_example();
 } 
