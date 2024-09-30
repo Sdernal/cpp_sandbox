@@ -203,10 +203,12 @@ void pointers_2d() {
 
 
 class Car {
+protected:
+	static int count;
 public:
 	std::string name;
 	int price;
-	static int count;
+	
 	static int tax;
 
 	Car() {
@@ -257,6 +259,72 @@ void class_example() {
 	lada.print();
 }
 
+class Bus : protected Car {
+
+public:
+	int wheels;
+	
+	void print() {
+		std::cout << "Bus " << name << " price: " << price + tax << "; wheels: " << wheels << std::endl;
+		std::cout << "Total cars: " << count << std::endl;
+	}
+};
+
+void inheritane_example() {
+	Bus bus;
+	bus.wheels = 8;
+	bus.print();
+}
+
+class Electric {
+protected:
+	int wattage;
+
+public:
+	Electric() {
+		wattage = 100;
+	}
+
+	~Electric() {
+		std::cout << "Energy exhausted" << std::endl;
+	}
+};
+
+
+
+class ElecticVehicle : public Car, protected Electric {
+public:
+	ElecticVehicle() {
+		wattage = 1000;
+		name = "CyberTrack";
+		price = 1000000;
+	}
+};
+
+void multiple_inheritance() {
+	ElecticVehicle cyberTruck;
+	cyberTruck.print();
+}
+
+class ElectroBus : protected Bus, private ElecticVehicle {
+public:
+	ElectroBus() {
+		wattage = 2000;
+		//name = "ElectroBus";
+		Bus::name = "ElectroBus";		
+	}
+
+	void print() {
+		std::cout << "Name from Bus: " << Bus::name << "Name from ElectricVehicle: " << ElecticVehicle::name << std::endl;
+		std::cout << "Total vehicles: " << count << std::endl;
+	}
+};
+
+void diamond_problem() {
+	ElectroBus bus;
+	bus.print();
+}
+
 void main() {
 	// std::cout << "Hello World!" << std::endl;
 	// size_of_types();
@@ -274,4 +342,7 @@ void main() {
 	// pointer_arithmetics();
 	// pointers_2d();
 	// class_example();
+	// inheritane_example();
+	// multiple_inheritance();
+	diamond_problem();
 } 
