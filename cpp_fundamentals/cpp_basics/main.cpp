@@ -259,7 +259,7 @@ void class_example() {
 	lada.print();
 }
 
-class Bus : protected Car {
+class Bus : protected virtual Car {
 
 public:
 	int wheels;
@@ -292,30 +292,38 @@ public:
 
 
 
-class ElecticVehicle : public Car, protected Electric {
+class ElecticVehicle : public virtual Car, protected Electric {
 public:
 	ElecticVehicle() {
 		wattage = 1000;
 		name = "CyberTrack";
 		price = 1000000;
 	}
+
+	ElecticVehicle(int wattage) : Car("CyberTrack", 1300000)  {
+		this->wattage = wattage;
+	}
+
+	void print() {
+		std::cout << "Bus " << name << " price: " << price + tax << "; wattage: " << wattage << std::endl;
+		std::cout << "Total cars: " << count << std::endl;
+	}
 };
 
 void multiple_inheritance() {
-	ElecticVehicle cyberTruck;
+	ElecticVehicle cyberTruck(2300);
 	cyberTruck.print();
 }
 
 class ElectroBus : protected Bus, private ElecticVehicle {
 public:
-	ElectroBus() {
-		wattage = 2000;
-		//name = "ElectroBus";
-		Bus::name = "ElectroBus";		
+	ElectroBus() :
+	Car("ElecroBus", 5000000), ElecticVehicle(2000) {
 	}
 
 	void print() {
-		std::cout << "Name from Bus: " << Bus::name << "Name from ElectricVehicle: " << ElecticVehicle::name << std::endl;
+		std::cout << "Name: "<< name << " Name from Bus: " << Bus::name << " Name from ElectricVehicle: " << ElecticVehicle::name << std::endl;
+		std::cout << "Wattage: " << wattage << std::endl;
 		std::cout << "Total vehicles: " << count << std::endl;
 	}
 };
@@ -344,5 +352,5 @@ void main() {
 	// class_example();
 	// inheritane_example();
 	// multiple_inheritance();
-	diamond_problem();
+	// diamond_problem();
 } 
