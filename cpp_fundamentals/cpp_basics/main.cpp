@@ -21,8 +21,8 @@ void summator() {
 	std::cout << a << " + " << b << " = " << a + b << std::endl;
 }
 
-static void swap(int& a, int& b) {
-	int c = a;
+template <typename T> static void swap(T& a, T& b) {
+	T c = a;
 	a = b;
 	b = c;
 }
@@ -201,55 +201,142 @@ void pointers_2d() {
 	std::cout << (*(a + 1))[1] << " " << *(*(b + 1)+1) << std::endl;
 }
 
+namespace vehicles {
 
-class Car {
-protected:
-	static int count;
-public:
-	std::string name;
-	int price;
+	class Vehicle {
+	public:
+		virtual void print() = 0;
+	};
+
+	class Car: public Vehicle {
+	protected:
+		static int count;
+	public:
+		std::string name;
+		int price;
+
+		static int tax;
+
+		Car() {
+			name = "default";
+			price = -1;
+			++count;
+		}
+
+		Car(std::string name, int price) {
+			this->name = name;
+			this->price = price;
+			++count;
+		}
+
+		Car(const Car& c) {
+			name = c.name;
+			price = c.price;
+			++count;
+		}
+
+		virtual void print() {
+			std::cout << "Car " << name << " price: " << price + tax << std::endl;
+		}
+
+		void info() {
+			std::cout << "This is a car" << std::endl;
+		}
+
+		void asign_tax(int tax) {
+			Car::tax = tax;
+		}
+
+		friend static void reset_counter();
+
+		~Car() {
+			--count;
+			std::cout << name << " crushed " << count << " cars remains" << std::endl;
+		}
+	};
+
+	int Car::count = 0;
+	int Car::tax = 0;
+	static void reset_counter() {
+		Car::count = 0;
+	}
+
+	class Bus : public virtual Car {
+
+	public:
+		int wheels;
+
+		virtual void print() {
+			std::cout << "Bus " << name << " price: " << price + tax << "; wheels: " << wheels << std::endl;
+			std::cout << "Total cars: " << count << std::endl;
+		}
+
+		void info() {
+			std::cout << "This is a bus" << std::endl;
+		}
+	};
+
+	void inheritane_example() {
+		Bus bus;
+		bus.wheels = 8;
+		bus.print();
+	}
+
+	class Electric {
+	protected:
+		int wattage;
+
+	public:
+		Electric() {
+			wattage = 100;
+		}
+
+		~Electric() {
+			std::cout << "Energy exhausted" << std::endl;
+		}
+	};
+
+
+
+	class ElecticVehicle : public virtual Car, protected Electric {
+	public:
+		ElecticVehicle() {
+			wattage = 1000;
+			name = "CyberTrack";
+			price = 1000000;
+		}
+
+		ElecticVehicle(int wattage) : Car("CyberTrack", 1300000) {
+			this->wattage = wattage;
+		}
+
+		virtual void print() {
+			std::cout << "Bus " << name << " price: " << price + tax << "; wattage: " << wattage << std::endl;
+			std::cout << "Total cars: " << count << std::endl;
+		}
+	};
+
 	
-	static int tax;
 
-	Car() {
-		name = "default";
-		price = -1;
-		++count;
-	}
+	class ElectroBus : protected Bus, private ElecticVehicle {
+	public:
+		ElectroBus() :
+			Car("ElecroBus", 5000000), ElecticVehicle(2000) {
+		}
 
-	Car(std::string name, int price) {
-		this->name = name;
-		this->price = price;
-		++count;
-	}
-
-	Car(const Car& c) {
-		name = c.name;
-		price = c.price;
-		++count;
-	}
-
-	void print() {
-		std::cout << "Car " << name << " price: " << price + tax << std::endl;
-	}
-
-	void asign_tax(int tax) {
-		Car::tax = tax;
-	}
-
-	~Car() {
-		--count;
-		std::cout << name << " crushed " << count << " cars remains" << std::endl;
-	}
-};
-
-int Car::count = 0;
-int Car::tax = 0;
+		virtual void print() {
+			std::cout << "Name: " << name << " Name from Bus: " << Bus::name << " Name from ElectricVehicle: " << ElecticVehicle::name << std::endl;
+			std::cout << "Wattage: " << wattage << std::endl;
+			std::cout << "Total vehicles: " << count << std::endl;
+		}
+	};
+}
 
 void class_example() {
-	Car lada("lada", 3000000);
+	vehicles::Car lada("lada", 3000000);
 	{
-		Car granta(lada);
+		vehicles::Car lada("lada", 3000000);
+		vehicles::Car granta(lada);
 		granta.name = "granta";
 		granta.print();
 		granta.asign_tax(10000);
@@ -259,78 +346,30 @@ void class_example() {
 	lada.print();
 }
 
-class Bus : protected virtual Car {
-
-public:
-	int wheels;
-	
-	void print() {
-		std::cout << "Bus " << name << " price: " << price + tax << "; wheels: " << wheels << std::endl;
-		std::cout << "Total cars: " << count << std::endl;
-	}
-};
-
-void inheritane_example() {
-	Bus bus;
-	bus.wheels = 8;
-	bus.print();
-}
-
-class Electric {
-protected:
-	int wattage;
-
-public:
-	Electric() {
-		wattage = 100;
-	}
-
-	~Electric() {
-		std::cout << "Energy exhausted" << std::endl;
-	}
-};
-
-
-
-class ElecticVehicle : public virtual Car, protected Electric {
-public:
-	ElecticVehicle() {
-		wattage = 1000;
-		name = "CyberTrack";
-		price = 1000000;
-	}
-
-	ElecticVehicle(int wattage) : Car("CyberTrack", 1300000)  {
-		this->wattage = wattage;
-	}
-
-	void print() {
-		std::cout << "Bus " << name << " price: " << price + tax << "; wattage: " << wattage << std::endl;
-		std::cout << "Total cars: " << count << std::endl;
-	}
-};
-
 void multiple_inheritance() {
-	ElecticVehicle cyberTruck(2300);
+	vehicles::ElecticVehicle cyberTruck(2300);
 	cyberTruck.print();
 }
 
-class ElectroBus : protected Bus, private ElecticVehicle {
-public:
-	ElectroBus() :
-	Car("ElecroBus", 5000000), ElecticVehicle(2000) {
-	}
-
-	void print() {
-		std::cout << "Name: "<< name << " Name from Bus: " << Bus::name << " Name from ElectricVehicle: " << ElecticVehicle::name << std::endl;
-		std::cout << "Wattage: " << wattage << std::endl;
-		std::cout << "Total vehicles: " << count << std::endl;
-	}
-};
-
 void diamond_problem() {
-	ElectroBus bus;
+	vehicles::ElectroBus bus;
 	bus.print();
+}
+
+void virtual_methods() {
+	using namespace vehicles;
+	Bus* bus = new Bus();
+	bus->info();
+	Car* car = bus;
+	car->info();
+	car->print();
+}
+
+void friend_example() {
+	vehicles::Car car1;
+	vehicles::Car car2(car1);
+	car2.name = "kaliina";
+	vehicles::reset_counter();
 }
 
 void main() {
@@ -353,4 +392,6 @@ void main() {
 	// inheritane_example();
 	// multiple_inheritance();
 	// diamond_problem();
+	// virtual_methods();
+	// friend_example();
 } 
