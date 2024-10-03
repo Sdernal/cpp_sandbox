@@ -234,6 +234,24 @@ namespace vehicles {
 			price = c.price;
 			++count;
 		}
+		Car& operator ++() {
+			price += 1000;
+			return *this;
+		}
+
+	    Car operator ++(int) {
+			Car new_car(*this);
+			price+=1000;
+			return new_car;
+		}
+
+		/*void operator ++(int) {
+			price++;
+		}*/
+
+		bool operator == (const Car& other) {
+			return other.name == name;
+		}
 
 		virtual void print() {
 			std::cout << "Car " << name << " price: " << price + tax << std::endl;
@@ -372,6 +390,18 @@ void friend_example() {
 	vehicles::reset_counter();
 }
 
+void operator_overload() {
+	vehicles::Car car("buhanka", 50000);
+	vehicles::Car old = car++;
+	old.print();
+	car.print();
+	++car;
+	car.print();
+	bool isEqual = car == old;
+	std::cout << isEqual << std::endl;
+
+}
+
 void main() {
 	// std::cout << "Hello World!" << std::endl;
 	// size_of_types();
@@ -394,4 +424,5 @@ void main() {
 	// diamond_problem();
 	// virtual_methods();
 	// friend_example();
+	operator_overload();
 } 
