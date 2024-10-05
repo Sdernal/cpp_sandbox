@@ -253,6 +253,10 @@ namespace vehicles {
 			return other.name == name;
 		}
 
+		Car operator + (const Car& other) {
+			return Car(name + other.name, price + other.price);
+		}
+
 		virtual void print() {
 			std::cout << "Car " << name << " price: " << price + tax << std::endl;
 		}
@@ -266,6 +270,7 @@ namespace vehicles {
 		}
 
 		friend static void reset_counter();
+		friend std::ostream& operator << (std::ostream& stream, const Car& car);
 
 		~Car() {
 			--count;
@@ -277,6 +282,11 @@ namespace vehicles {
 	int Car::tax = 0;
 	static void reset_counter() {
 		Car::count = 0;
+	}
+
+	std::ostream& operator << (std::ostream& stream, const Car& car) {
+		stream << "Car " << car.name << " price: " << car.price + car.tax << " Total: " << car.count << std::endl;
+		return stream;
 	}
 
 	class Bus : public virtual Car {
@@ -399,7 +409,9 @@ void operator_overload() {
 	car.print();
 	bool isEqual = car == old;
 	std::cout << isEqual << std::endl;
-
+	vehicles::Car big = car + old;
+	big.print();
+	std::cout << big;
 }
 
 void main() {
@@ -424,5 +436,5 @@ void main() {
 	// diamond_problem();
 	// virtual_methods();
 	// friend_example();
-	operator_overload();
+	// operator_overload();
 } 
