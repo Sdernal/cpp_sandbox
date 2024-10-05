@@ -414,6 +414,52 @@ void operator_overload() {
 	std::cout << big;
 }
 
+struct Sample {
+	std::string color;
+	int price;
+};
+
+std::ostream& operator << (std::ostream& stream, const Sample& smpl) {
+	stream << "Color " << smpl.color << " price: " << smpl.price << std::endl;
+	return stream;
+}
+
+void struct_example() {
+	Sample smpl1;
+	smpl1.color = "red";
+	smpl1.price = 10;
+	Sample smpl2 = {"blue", 5};
+	std::cout << smpl1;
+	std::cout << smpl2;
+	
+}
+
+union Uni {
+	char a;
+	int b;
+};
+
+void union_example(){
+	Uni uni;
+	uni.b = 83;
+	std::cout << uni.a << " " << uni.b << std::endl;
+	uni.a = 'a';
+	std::cout << uni.a << " " << uni.b << std::endl;
+}
+
+void enum_example() {
+	enum Color { blue, red = 3, black, yellow};
+	//int black = 10; complile error
+	std::cout << "Blue: " << Color::blue << std::endl;
+	std::cout << "Red: " << Color::red << std::endl;
+	std::cout << "Black: " << Color::black << std::endl;
+	std::cout << "Yellow: " << Color::yellow << std::endl;
+
+	Color color;
+	color = black;
+	std::cout << "Chosen color: " << color << std::endl;
+}
+
 void main() {
 	// std::cout << "Hello World!" << std::endl;
 	// size_of_types();
@@ -437,4 +483,7 @@ void main() {
 	// virtual_methods();
 	// friend_example();
 	// operator_overload();
+	// struct_example();
+	// union_example();
+	// enum_example();
 } 
