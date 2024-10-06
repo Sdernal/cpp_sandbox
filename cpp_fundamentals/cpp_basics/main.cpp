@@ -1,4 +1,7 @@
 #include <iostream>
+#include <exception>
+#include <fstream>
+#include <string>
 
 void size_of_types() {
 	std::cout << "Size of int: " << sizeof(int) << " bytes" << std::endl;
@@ -460,6 +463,80 @@ void enum_example() {
 	std::cout << "Chosen color: " << color << std::endl;
 }
 
+class DumbException : public std::exception {
+private:
+	std::string msg;
+public:
+	DumbException(std::string _m) : msg(_m) {}
+	friend std::ostream& operator << (std::ostream& s, const DumbException& e);
+};
+
+std::ostream& operator << (std::ostream& s, const DumbException& e) {
+	s << "Exception handled: " << e.msg << std::endl;
+	return s;
+}
+
+void exception_example() {
+	int a = 3;
+	try {
+		if (a > 4) {
+			throw a;
+		}
+		else {
+			throw DumbException("a is less than a 5");
+		}
+
+	} catch(int e) {
+		std::cout << "Exception handled: " << e << std::endl;
+	}
+	catch (DumbException& e) {
+		std::cout << e;
+	}
+}
+
+void file_example() {
+	std::ofstream fout;
+	//char buffer[256];
+	fout.open("sample.txt");
+	std::string line;
+	while (fout) {
+		//std::cin.getline(buffer, 256);
+		std::getline(std::cin, line);
+		if (line.length() == 0) {
+			break;
+		}
+		fout << line << std::endl;
+	}
+	fout.close();
+	
+	std::ifstream fin;
+	fin.open("sample.txt");
+	while (fin) {
+		std::getline(fin, line);
+		std::cout << line << std::endl;
+	}
+
+}
+
+void random_access_example() {
+	std::ifstream fin;
+	fin.open("sample.txt");
+	if (!fin) {
+		std::cout << "Failed to open file sample.txt" << std::endl;
+	}
+
+	std::string buffer;
+	fin.seekg(3);
+	std::getline(fin, buffer);
+	std::cout << buffer << std::endl;
+	fin.seekg(6, std::ios::cur);
+	std::getline(fin, buffer);
+	std::cout << buffer << std::endl;
+	fin.seekg(-10, std::ios::end);
+	std::getline(fin, buffer);
+	std::cout << buffer << std::endl;
+}
+
 void main() {
 	// std::cout << "Hello World!" << std::endl;
 	// size_of_types();
@@ -486,4 +563,7 @@ void main() {
 	// struct_example();
 	// union_example();
 	// enum_example();
+	// exception_example();
+	// file_example();
+	// random_access_example();
 } 
